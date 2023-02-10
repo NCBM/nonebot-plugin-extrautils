@@ -1,7 +1,7 @@
 [project]
 name = "nonebot-plugin-extrautils"
-version = "0.7.3"
-description = "NoneBot2 plugin for AI chat"
+version = "0.1.1"
+description = "Extra utility functions for easier development with nonebot2"
 authors = [
     {name = "HivertMoZara", email = "worldmozara@163.com"},
 ]

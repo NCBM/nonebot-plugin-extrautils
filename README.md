@@ -8,7 +8,7 @@
 
 # nonebot-plugin-extrautils
 
-_✨ Extra utility functions for easier development. 方便开发的更多小功能。 ✨_
+_✨ Extra utility functions for easier development with nonebot2. 方便开发的更多小功能。 ✨_
 
 <a href="./LICENSE">
     <img src="https://img.shields.io/github/license/NCBM/nonebot-plugin-extrautils.svg" alt="license">

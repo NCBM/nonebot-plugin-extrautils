@@ -81,10 +81,10 @@ _✨ Extra utility functions for easier development. 方便开发的更多小功
 
 | 功能组 | 函数 | 说明 | 参数 | 备注 |
 |:-------|:-----|:-----|:-----|:-----|
-| ob11.universal | get_avatar_url | 获取指定 QQ 用户头像 URL | (uid: int \| str) -> str | W.I.P. |
-| ob11.universal | get_avatar_bytes | 下载指定 QQ 用户头像 | [async] (uid: int \| str) -> bytes | W.I.P. |
-| ob11.universal | get_user_name | 获取指定 QQ 用户所在会话的昵称 | [async] (\*, bot: \_OneBotV11Bot, event: \_OneBotV11MessageEvent) -> str | 优先级：群昵称>用户昵称, 有未封装版本, W.I.P. |
-| ob11.universal | get_user_name_bare | 获取指定 QQ 用户昵称 | [async] (\*, bot: \_OneBotV11Bot, event: \_OneBotV11MessageEvent) -> str | 有未封装版本, W.I.P. |
-| ob11.universal | get_user_name_group | 获取指定 QQ 用户群昵称 | [async] (\*, bot: \_OneBotV11Bot, event: \_OneBotV11GroupMessageEvent) -> str | 有未封装版本, W.I.P. |
+| ob11.universal | get_avatar_url | 获取指定 QQ 用户头像 URL | (uid: int \| str, size: int = ...) -> str | - |
+| ob11.universal | get_avatar_bytes | 下载指定 QQ 用户头像 | [async] (uid: int \| str, size: int = ...) -> bytes | - |
+| ob11.universal | get_user_name | 获取指定 QQ 用户所在会话的昵称 | [async] (\*, bot: \_OneBotV11Bot, event: \_OneBotV11MessageEvent, no_cache: bool = ...) -> str | 优先级：群名片>用户昵称, W.I.P. |
+| ob11.universal | get_user_name_bare | 获取指定 QQ 用户昵称 | [async] (\*, bot: \_OneBotV11Bot, event: \_OneBotV11MessageEvent, no_cache: bool = ...) -> str | 有未封装版本 |
+| ob11.universal | get_user_name_group | 获取指定 QQ 用户群昵称 | [async] (\*, bot: \_OneBotV11Bot, event: \_OneBotV11GroupMessageEvent, no_cache: bool = ...) -> str | 有未封装版本 |
 | ob11.gocq | send_forward_msg | 发送合并转发消息 | [async] (\*, bot: \_OneBotV11Bot, event: \_OneBotV11MessageEvent, nodes: Sequence[Message \| Sequence[dict[str, Any]] \| str]) -> dict[str, Any] | 有未封装版本, W.I.P. |
 | ob11.gocq | send_forward_msg_custom | 发送合并转发消息 | [async] (\*, bot: \_OneBotV11Bot, event: \_OneBotV11MessageEvent, nodes: Sequence[MessageNode \| MessageSegment \| dict[str, Any]]) -> dict[str, Any] | 允许自定义发送者信息, 有未封装版本, W.I.P. |

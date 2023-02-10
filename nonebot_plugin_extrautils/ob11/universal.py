@@ -170,3 +170,11 @@ async def get_user_name(
     return await get_user_name_bare(
         bot=bot, event=event, no_cache=no_cache
     )
+
+
+__all__ = (
+    "AVATAR_SIZE_SMALL", "AVATAR_SIZE_MEDIUM", "AVATAR_SIZE_BIG",
+    "get_avatar_url", "get_avatar_bytes",
+    "_get_user_name_bare", "_get_user_name_group",
+    "get_user_name_bare", "get_user_name_group", "get_user_name"
+)

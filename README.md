@@ -6,32 +6,23 @@
 
 <div align="center">
 
-# nonebot-plugin-example
+# nonebot-plugin-extrautils
 
-_✨ NoneBot 插件简单描述 ✨_
-
+_✨ Extra utility functions for easier development. 方便开发的更多小功能。 ✨_
 
 <a href="./LICENSE">
-    <img src="https://img.shields.io/github/license/owner/nonebot-plugin-example.svg" alt="license">
+    <img src="https://img.shields.io/github/license/NCBM/nonebot-plugin-extrautils.svg" alt="license">
 </a>
-<a href="https://pypi.python.org/pypi/nonebot-plugin-example">
-    <img src="https://img.shields.io/pypi/v/nonebot-plugin-example.svg" alt="pypi">
+<a href="https://pypi.python.org/pypi/nonebot-plugin-extrautils">
+    <img src="https://img.shields.io/pypi/v/nonebot-plugin-extrautils.svg" alt="pypi">
 </a>
 <img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="python">
 
 </div>
 
-这是一个 nonebot2 插件项目的模板库, 你可以直接使用本模板创建你的 nonebot2 插件项目的仓库
-
-模板库使用方法:
-1. 点击仓库中的 "Use this template" 按钮, 输入仓库名与描述, 点击 "  Create repository from template" 创建仓库
-2. 在创建好的新仓库中, 在 "Add file" 菜单中选择 "Create new file", 在新文件名处输入`LICENSE`, 此时在右侧会出现一个 "Choose a license template" 按钮, 点击此按钮选择开源协议模板, 然后在最下方提交新文件到主分支
-3. 全局替换`owner`为仓库所有者ID; 全局替换`nonebot-plugin-example`为插件名; 全局替换`nonebot_plugin_example`为包名; 修改 python 徽标中的版本为你插件的运行所需版本
-4. 修改 README 中的插件名和插件描述, 并在下方填充相应的内容
-
 ## 📖 介绍
 
-这里是插件的详细介绍部分
+本插件集成了一些便于开发的小功能。
 
 ## 💿 安装
 
@@ -39,7 +30,7 @@ _✨ NoneBot 插件简单描述 ✨_
 <summary>使用 nb-cli 安装</summary>
 在 nonebot2 项目的根目录下打开命令行, 输入以下指令即可安装
 
-    nb plugin install nonebot-plugin-example
+    nb plugin install nonebot-plugin-extrautils
 
 </details>
 
@@ -47,47 +38,53 @@ _✨ NoneBot 插件简单描述 ✨_
 <summary>使用包管理器安装</summary>
 在 nonebot2 项目的插件目录下, 打开命令行, 根据你使用的包管理器, 输入相应的安装命令
 
+> 注意：如果机器人在某个虚拟环境中运行，请确保安装前已经进入虚拟环境
+
 <details>
 <summary>pip</summary>
 
-    pip install nonebot-plugin-example
+    pip install nonebot-plugin-extrautils
 </details>
 <details>
 <summary>pdm</summary>
 
-    pdm add nonebot-plugin-example
+    pdm add nonebot-plugin-extrautils
 </details>
 <details>
 <summary>poetry</summary>
 
-    poetry add nonebot-plugin-example
+    poetry add nonebot-plugin-extrautils
 </details>
 <details>
 <summary>conda</summary>
 
-    conda install nonebot-plugin-example
+    conda install nonebot-plugin-extrautils
 </details>
 
-打开 nonebot2 项目的 `bot.py` 文件, 在其中写入
-
-    nonebot.load_plugin('nonebot_plugin_example')
+然后**自行加载本插件**
 
 </details>
-
-## ⚙️ 配置
-
-在 nonebot2 项目的`.env`文件中添加下表中的必填配置
-
-| 配置项 | 必填 | 默认值 | 说明 |
-|:-----:|:----:|:----:|:----:|
-| 配置项1 | 是 | 无 | 配置说明 |
-| 配置项2 | 否 | 无 | 配置说明 |
 
 ## 🎉 使用
-### 指令表
-| 指令 | 权限 | 需要@ | 范围 | 说明 |
-|:-----:|:----:|:----:|:----:|:----:|
-| 指令1 | 主人 | 否 | 私聊 | 指令说明 |
-| 指令2 | 群员 | 是 | 群聊 | 指令说明 |
-### 效果图
-如果有效果图的话
+
+在插件中导入对应的功能组或函数：
+
+    from nonebot_plugin_extrautils.ob11 import universal
+    # 或者
+    from nonebot_plugin_extrautils.ob11.gocq import send_forward_msg
+
+然后按需调用即可。
+
+本插件目前不会涉及框架本身功能，**不需要**通过 `nonebot.load_plugin()` 或 `require()` 作为功能插件加载。
+
+### 功能集
+
+| 功能组 | 函数 | 说明 | 参数 | 备注 |
+|:-------|:-----|:-----|:-----|:-----|
+| ob11.universal | get_avatar_url | 获取指定 QQ 用户头像 URL | (uid: int \| str) -> str | W.I.P. |
+| ob11.universal | get_avatar_bytes | 下载指定 QQ 用户头像 | [async] (uid: int \| str) -> bytes | W.I.P. |
+| ob11.universal | get_user_name | 获取指定 QQ 用户所在会话的昵称 | [async] (\*, bot: \_OneBotV11Bot, event: \_OneBotV11MessageEvent) -> str | 优先级：群昵称>用户昵称, 有未封装版本, W.I.P. |
+| ob11.universal | get_user_name_bare | 获取指定 QQ 用户昵称 | [async] (\*, bot: \_OneBotV11Bot, event: \_OneBotV11MessageEvent) -> str | 有未封装版本, W.I.P. |
+| ob11.universal | get_user_name_group | 获取指定 QQ 用户群昵称 | [async] (\*, bot: \_OneBotV11Bot, event: \_OneBotV11GroupMessageEvent) -> str | 有未封装版本, W.I.P. |
+| ob11.gocq | send_forward_msg | 发送合并转发消息 | [async] (\*, bot: \_OneBotV11Bot, event: \_OneBotV11MessageEvent, nodes: Sequence[Message \| Sequence[dict[str, Any]] \| str]) -> dict[str, Any] | 有未封装版本, W.I.P. |
+| ob11.gocq | send_forward_msg_custom | 发送合并转发消息 | [async] (\*, bot: \_OneBotV11Bot, event: \_OneBotV11MessageEvent, nodes: Sequence[MessageNode \| MessageSegment \| dict[str, Any]]) -> dict[str, Any] | 允许自定义发送者信息, 有未封装版本, W.I.P. |

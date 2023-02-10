@@ -1,17 +1,16 @@
 from typing import Any, Optional, Union
 import httpx
 from nonebot.adapters.onebot.v11 import (
-    Bot as _OneBotV11Bot,
-    Message as _OneBotV11Message,
-    MessageEvent as _OneBotV11MessageEvent,
-    MessageSegment as _OneBotV11MessageSegment
+    Bot, Message, MessageEvent, MessageSegment
 )
 
 from nonebot.adapters.onebot.v11 import (
     GroupMessageEvent, GroupUploadNoticeEvent,
     GroupAdminNoticeEvent, GroupDecreaseNoticeEvent,
     GroupIncreaseNoticeEvent, GroupBanNoticeEvent,
-    GroupRecallNoticeEvent, GroupRequestEvent, NotifyEvent
+    GroupRecallNoticeEvent, GroupRequestEvent, NotifyEvent,
+    FriendAddNoticeEvent, FriendRecallNoticeEvent,
+    FriendRequestEvent
 )
 
 _GroupEvent = Union[
@@ -19,6 +18,11 @@ _GroupEvent = Union[
     GroupAdminNoticeEvent, GroupDecreaseNoticeEvent,
     GroupIncreaseNoticeEvent, GroupBanNoticeEvent,
     GroupRecallNoticeEvent, GroupRequestEvent, NotifyEvent
+]
+
+_UserEvent = Union[
+    MessageEvent, _GroupEvent, FriendAddNoticeEvent,
+    FriendRecallNoticeEvent, FriendRequestEvent
 ]
 
 AVATAR_SIZE_SMALL = 40
@@ -48,7 +52,7 @@ async def get_avatar_bytes(
     
 
 async def _get_user_name_bare(
-    *, bot: _OneBotV11Bot, uid: int, no_cache: bool = False
+    *, bot: Bot, uid: int, no_cache: bool = False
 ) -> str:
     return str(
         (await bot.get_stranger_info(user_id=uid, no_cache=no_cache))
@@ -57,7 +61,7 @@ async def _get_user_name_bare(
 
 
 async def _get_user_name_group(
-    *, bot: _OneBotV11Bot, gid: int, uid: int, no_cache: bool = False
+    *, bot: Bot, gid: int, uid: int, no_cache: bool = False
 ) -> str:
     info = await bot.get_group_member_info(
         group_id=gid, user_id=uid, no_cache=no_cache
@@ -66,18 +70,32 @@ async def _get_user_name_group(
 
 
 async def get_user_name_bare(
-    *, bot: _OneBotV11Bot, event: _OneBotV11MessageEvent,
-    no_cache: bool = False
-):
+    *, bot: Bot, event: _UserEvent, no_cache: bool = False
+) -> str:
     return await _get_user_name_bare(
         bot=bot, uid=event.user_id, no_cache=no_cache
     )
 
 
 async def get_user_name_group(
-    *, bot: _OneBotV11Bot, event: _GroupEvent,
-    no_cache: bool = False
-):
+    *, bot: Bot, event: _GroupEvent, no_cache: bool = False
+) -> str:
     return await _get_user_name_group(
         bot=bot, gid=event.group_id, uid=event.user_id, no_cache=no_cache
+    )
+
+
+async def get_user_name(
+    *, bot: Bot, event: _UserEvent, no_cache: bool = False
+):
+    if not hasattr(event, "user_id"):
+        raise AttributeError(
+            f"event {event!r} does not include attrinute 'user_id'"
+        )
+    if (gid := getattr(event, "group_id", None)) is not None:
+        return await _get_user_name_group(
+            bot=bot, gid=gid, uid=event.user_id, no_cache=no_cache
+        )
+    return await get_user_name_bare(
+        bot=bot, event=event, no_cache=no_cache
     )

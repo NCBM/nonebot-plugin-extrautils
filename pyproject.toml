@@ -1,0 +1,15 @@
+[project]
+name = "nonebot-plugin-extrautils"
+version = "0.7.3"
+description = "NoneBot2 plugin for AI chat"
+authors = [
+    {name = "HivertMoZara", email = "worldmozara@163.com"},
+]
+license = {text = "MIT"}
+dependencies = ["nonebot2>=2.0.0b1", "nonebot-adapter-onebot>=2.1", "httpx>=0.23"]
+requires-python = ">=3.8"
+readme = "README.md"
+
+[project.urls]
+Homepage = "https://github.com/NCBM/nonebot-plugin-extrautils"
+Repository = "https://github.com/NCBM/nonebot-plugin-extrautils"

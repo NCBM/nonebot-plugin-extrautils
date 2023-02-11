@@ -1,7 +1,7 @@
-from typing import Any, Optional, Union
+from typing import Union
 import httpx
 from nonebot.adapters.onebot.v11 import (
-    Bot, Message, MessageEvent, MessageSegment
+    Bot, Event, MessageEvent
 )
 
 from nonebot.adapters.onebot.v11 import (
@@ -29,6 +29,9 @@ AVATAR_SIZE_SMALL = 40
 AVATAR_SIZE_MEDIUM = 100
 AVATAR_SIZE_BIG = 640
 
+MSG_TYPE_PRIVATE = "private"
+MSG_TYPE_GROUP = "group"
+
 
 def get_avatar_url(uid: Union[int, str], size: int = AVATAR_SIZE_BIG) -> str:
     """
@@ -44,7 +47,10 @@ def get_avatar_url(uid: Union[int, str], size: int = AVATAR_SIZE_BIG) -> str:
     if size not in (AVATAR_SIZE_SMALL, AVATAR_SIZE_MEDIUM, AVATAR_SIZE_BIG):
         raise ValueError(
             f"unsupported avatar size: {size}\n\n"
-            "You should use pre-defined constants starts with 'AVATAR_SIZE_'."
+            "These sizes below are supported:\n"
+            f"    {AVATAR_SIZE_SMALL=}\n"
+            f"    {AVATAR_SIZE_MEDIUM=}\n"
+            f"    {AVATAR_SIZE_BIG=}"
         )
     if (isinstance(uid, str) and not uid.isdigit()) or \
             (isinstance(uid, int) and uid < 10000):
@@ -148,7 +154,7 @@ async def get_user_name_group(
 
 async def get_user_name(
     *, bot: Bot, event: _UserEvent, no_cache: bool = False
-):
+) -> str:
     """
     获取指定 QQ 用户所在会话的昵称
 
@@ -172,9 +178,34 @@ async def get_user_name(
     )
 
 
+async def get_self_name(
+    *, bot: Bot, event: Event, no_cache: bool = False
+) -> str:
+    """
+    获取机器人自身所在会话的昵称
+
+    参数：
+    - bot: OneBot v11 Bot 实例
+    - event: 可提取自身 ID 的 OneBot v11 事件
+    - no_cache: 是否不使用缓存
+
+    返回值: 群名片/昵称字符串
+    """
+    if (gid := getattr(event, "group_id", None)) is not None:
+        return await _get_user_name_group(
+            bot=bot, gid=gid, uid=event.self_id, no_cache=no_cache
+        )
+    return await _get_user_name_bare(
+        bot=bot, uid=event.self_id, no_cache=no_cache
+    )
+
+
 __all__ = (
     "AVATAR_SIZE_SMALL", "AVATAR_SIZE_MEDIUM", "AVATAR_SIZE_BIG",
+    "MSG_TYPE_PRIVATE", "MSG_TYPE_GROUP",
     "get_avatar_url", "get_avatar_bytes",
     "_get_user_name_bare", "_get_user_name_group",
-    "get_user_name_bare", "get_user_name_group", "get_user_name"
+    "get_user_name_bare", "get_user_name_group", "get_user_name",
+    "get_self_name",
+    "_UserEvent", "_GroupEvent"
 )

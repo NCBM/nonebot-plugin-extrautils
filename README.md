@@ -22,7 +22,7 @@ _✨ Extra utility functions for easier development with nonebot2. 方便开发�
 
 ## 📖 介绍
 
-本插件集成了一些便于开发的小功能。
+本插件集成了一些便于开发 nonebot2 插件的小功能。
 
 ## 💿 安装
 

@@ -129,6 +129,8 @@ async def get_user_name_bare(
 
     返回值: 昵称字符串
     """
+    if isinstance(event, MessageEvent):
+        return event.sender.nickname or ""
     return await _get_user_name_bare(
         bot=bot, uid=event.user_id, no_cache=no_cache
     )
@@ -147,6 +149,8 @@ async def get_user_name_group(
 
     返回值: 群名片/昵称字符串
     """
+    if isinstance(event, MessageEvent):
+        return event.sender.card or event.sender.nickname or ""
     return await _get_user_name_group(
         bot=bot, gid=event.group_id, uid=event.user_id, no_cache=no_cache
     )
@@ -170,6 +174,8 @@ async def get_user_name(
             f"event {event!r} does not include attrinute 'user_id'"
         )
     if (gid := getattr(event, "group_id", None)) is not None:
+        if isinstance(event, MessageEvent):
+            return event.sender.card or event.sender.nickname or ""
         return await _get_user_name_group(
             bot=bot, gid=gid, uid=event.user_id, no_cache=no_cache
         )

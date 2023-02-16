@@ -28,4 +28,5 @@
 | ob11.gocq | msg2node_custom | 转化多条消息到发送者为指定用户的消息节点 | - |
 | ob11.gocq | send_forward_msg | 发送合并转发消息 | 发送者为机器人自身 |
 | ob11.gocq | send_forward_msg_custom | 发送合并转发消息 | 允许自定义发送者信息, 有未封装版本 |
+| misc | TmpFile | 临时文件封装 | 支持 Context manager |
 """

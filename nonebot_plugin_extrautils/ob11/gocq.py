@@ -1,14 +1,13 @@
-from typing import Any, Dict, Sequence, Union
+from typing import Any, Dict, Sequence, TypeAlias, Union
 from .universal import *
-from nonebot.adapters.onebot.v11 import (
-    Bot, Event, Message, MessageSegment
-)
+from nonebot.adapters.onebot.v11 import Bot, Message, MessageSegment
+
+ComplexMessage = Union[Message, Sequence[Dict[str, Any]]]
+CQCode: TypeAlias = str
+SimpleMessage = Union[ComplexMessage, CQCode]
 
 
-def Node(
-    uid: int, name: str,
-    content: Union[Sequence[Union[MessageSegment, Dict[str, Any]]], str]
-) -> MessageSegment:
+def Node(uid: int, name: str, content: SimpleMessage) -> MessageSegment:
     """
     构造适用于 go-cqhttp 的简单自定义消息节点
 
@@ -27,8 +26,7 @@ def Node(
 
 
 async def msg2node_self(
-    *msgs: Union[Sequence[Union[MessageSegment, Dict[str, Any]]], str],
-    bot: Bot, event: Event
+    *msgs: SimpleMessage, bot: Bot, event: _BaseEvent
 ) -> Message:
     """
     转化多条消息到发送者为自身的消息节点
@@ -45,10 +43,7 @@ async def msg2node_self(
     return Message(Node(uid, name, m) for m in msgs)
 
 
-def msg2node_custom(
-    *msgs: Union[Sequence[Union[MessageSegment, Dict[str, Any]]], str],
-    uid: int, name: str
-) -> Message:
+def msg2node_custom(*msgs: SimpleMessage, uid: int, name: str) -> Message:
     """
     转化多条消息到发送者为指定用户的消息节点
 
@@ -63,8 +58,7 @@ def msg2node_custom(
 
 
 async def _send_forward_msg_custom(
-    *, bot: Bot, type: str, dest_id: int,
-    nodes: Sequence[Union[MessageSegment, Dict[str, Any]]]
+    *, bot: Bot, type: str, dest_id: int, nodes: ComplexMessage
 ) -> Dict[str, Any]:
     """
     发送合并转发消息
@@ -93,8 +87,7 @@ async def _send_forward_msg_custom(
     
 
 async def send_forward_msg_custom(
-    *, bot: Bot, event: _UserEvent,
-    nodes: Sequence[Union[MessageSegment, Dict[str, Any]]]
+    *, bot: Bot, event: _UserEvent, nodes: ComplexMessage
 ) -> Dict[str, Any]:
     """
     发送合并转发消息
@@ -120,10 +113,7 @@ async def send_forward_msg_custom(
 
 
 async def send_forward_msg(
-    *, bot: Bot, event: _UserEvent,
-    msgs: Sequence[
-        Union[Sequence[Union[MessageSegment, Dict[str, Any]]], str]
-    ]
+    *, bot: Bot, event: _UserEvent, msgs: Sequence[SimpleMessage]
 ) -> Dict[str, Any]:
     """
     发送合并转发消息

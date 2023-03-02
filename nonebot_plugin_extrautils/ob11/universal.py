@@ -1,29 +1,19 @@
-from typing import Union
+from typing import Protocol, Union
 import httpx
-from nonebot.adapters.onebot.v11 import (
-    Bot, Event, MessageEvent
-)
+from nonebot.adapters.onebot.v11 import Bot, MessageEvent
 
-from nonebot.adapters.onebot.v11 import (
-    GroupMessageEvent, GroupUploadNoticeEvent,
-    GroupAdminNoticeEvent, GroupDecreaseNoticeEvent,
-    GroupIncreaseNoticeEvent, GroupBanNoticeEvent,
-    GroupRecallNoticeEvent, GroupRequestEvent, NotifyEvent,
-    FriendAddNoticeEvent, FriendRecallNoticeEvent,
-    FriendRequestEvent
-)
 
-_GroupEvent = Union[
-    GroupMessageEvent, GroupUploadNoticeEvent,
-    GroupAdminNoticeEvent, GroupDecreaseNoticeEvent,
-    GroupIncreaseNoticeEvent, GroupBanNoticeEvent,
-    GroupRecallNoticeEvent, GroupRequestEvent, NotifyEvent
-]
+class _BaseEvent(Protocol):
+    self_id: int
 
-_UserEvent = Union[
-    MessageEvent, _GroupEvent, FriendAddNoticeEvent,
-    FriendRecallNoticeEvent, FriendRequestEvent
-]
+
+class _UserEvent(_BaseEvent, Protocol):
+    user_id: int
+
+
+class _GroupEvent(_UserEvent, Protocol):
+    group_id: int
+
 
 AVATAR_SIZE_SMALL = 40
 AVATAR_SIZE_MEDIUM = 100
@@ -185,7 +175,7 @@ async def get_user_name(
 
 
 async def get_self_name(
-    *, bot: Bot, event: Event, no_cache: bool = False
+    *, bot: Bot, event: _BaseEvent, no_cache: bool = False
 ) -> str:
     """
     获取机器人自身所在会话的昵称
@@ -213,5 +203,5 @@ __all__ = (
     "_get_user_name_bare", "_get_user_name_group",
     "get_user_name_bare", "get_user_name_group", "get_user_name",
     "get_self_name",
-    "_UserEvent", "_GroupEvent"
+    "_BaseEvent", "_UserEvent", "_GroupEvent"
 )

@@ -1,22 +1,11 @@
-from typing import Protocol, Union
+from typing import Union
 import httpx
 from nonebot.adapters.onebot.v11 import Bot, MessageEvent
-
-
-class _BaseEvent(Protocol):
-    self_id: int
-
-
-class _UserEvent(_BaseEvent, Protocol):
-    user_id: int
-
-
-class _GroupEvent(_UserEvent, Protocol):
-    group_id: int
-
+from .protocols import *
 
 AVATAR_SIZE_SMALL = 40
 AVATAR_SIZE_MEDIUM = 100
+AVATAR_SIZE_XMEDIUM = 140
 AVATAR_SIZE_BIG = 640
 
 MSG_TYPE_PRIVATE = "private"
@@ -30,16 +19,20 @@ def get_avatar_url(uid: Union[int, str], size: int = AVATAR_SIZE_BIG) -> str:
     参数：
     - uid: 用户 QQ 号
     - size: 头像尺寸
-      - 建议值: `AVATAR_SIZE_SMALL`, `AVATAR_SIZE_MEDIUM`, `AVATAR_SIZE_BIG`
+      - 建议值: `AVATAR_SIZE_SMALL`, `AVATAR_SIZE_MEDIUM`,
+      `AVATAR_SIZE_XMEDIUM`, `AVATAR_SIZE_BIG`
     
     返回值: 图像 URL
     """
-    if size not in (AVATAR_SIZE_SMALL, AVATAR_SIZE_MEDIUM, AVATAR_SIZE_BIG):
+    if size not in (
+        AVATAR_SIZE_SMALL, AVATAR_SIZE_MEDIUM, AVATAR_SIZE_XMEDIUM, AVATAR_SIZE_BIG
+    ):
         raise ValueError(
             f"unsupported avatar size: {size}\n\n"
             "These sizes below are supported:\n"
             f"    {AVATAR_SIZE_SMALL=}\n"
             f"    {AVATAR_SIZE_MEDIUM=}\n"
+            f"    {AVATAR_SIZE_XMEDIUM=}\n"
             f"    {AVATAR_SIZE_BIG=}"
         )
     if (isinstance(uid, str) and not uid.isdigit()) or \
@@ -57,7 +50,8 @@ async def get_avatar_bytes(
     参数：
     - uid: 用户 QQ 号
     - size: 头像尺寸
-      - 建议值: `AVATAR_SIZE_SMALL`, `AVATAR_SIZE_MEDIUM`, `AVATAR_SIZE_BIG`
+      - 建议值: `AVATAR_SIZE_SMALL`, `AVATAR_SIZE_MEDIUM`,
+      `AVATAR_SIZE_XMEDIUM`, `AVATAR_SIZE_BIG`
 
     返回值: 图像字节数据
     """
@@ -107,7 +101,7 @@ async def _get_user_name_group(
 
 
 async def get_user_name_bare(
-    *, bot: Bot, event: _UserEvent, no_cache: bool = False
+    *, bot: Bot, event: HasUserID, no_cache: bool = False
 ) -> str:
     """
     获取指定 QQ 用户昵称
@@ -127,7 +121,7 @@ async def get_user_name_bare(
 
 
 async def get_user_name_group(
-    *, bot: Bot, event: _GroupEvent, no_cache: bool = False
+    *, bot: Bot, event: HasGroupID, no_cache: bool = False
 ) -> str:
     """
     获取指定 QQ 用户群昵称
@@ -147,7 +141,7 @@ async def get_user_name_group(
 
 
 async def get_user_name(
-    *, bot: Bot, event: _UserEvent, no_cache: bool = False
+    *, bot: Bot, event: HasUserID, no_cache: bool = False
 ) -> str:
     """
     获取指定 QQ 用户所在会话的昵称
@@ -175,7 +169,7 @@ async def get_user_name(
 
 
 async def get_self_name(
-    *, bot: Bot, event: _BaseEvent, no_cache: bool = False
+    *, bot: Bot, event: HasSelfID, no_cache: bool = False
 ) -> str:
     """
     获取机器人自身所在会话的昵称
@@ -197,11 +191,11 @@ async def get_self_name(
 
 
 __all__ = (
-    "AVATAR_SIZE_SMALL", "AVATAR_SIZE_MEDIUM", "AVATAR_SIZE_BIG",
+    "AVATAR_SIZE_SMALL", "AVATAR_SIZE_MEDIUM",
+    "AVATAR_SIZE_XMEDIUM", "AVATAR_SIZE_BIG",
     "MSG_TYPE_PRIVATE", "MSG_TYPE_GROUP",
     "get_avatar_url", "get_avatar_bytes",
     "_get_user_name_bare", "_get_user_name_group",
     "get_user_name_bare", "get_user_name_group", "get_user_name",
     "get_self_name",
-    "_BaseEvent", "_UserEvent", "_GroupEvent"
 )

@@ -1,5 +1,6 @@
 from typing import Any, Dict, Sequence, TypeAlias, Union
 from .universal import *
+from .protocols import *
 from nonebot.adapters.onebot.v11 import Bot, Message, MessageSegment
 
 ComplexMessage = Union[Message, Sequence[Dict[str, Any]]]

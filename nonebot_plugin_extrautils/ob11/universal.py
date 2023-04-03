@@ -1,6 +1,8 @@
 from typing import Union
 import httpx
 from nonebot.adapters.onebot.v11 import Bot, MessageEvent
+
+from nonebot_plugin_extrautils.nonetheless import BaseBotCombination
 from .protocols import *
 
 AVATAR_SIZE_SMALL = 40
@@ -188,6 +190,10 @@ async def get_self_name(
     return await _get_user_name_bare(
         bot=bot, uid=event.self_id, no_cache=no_cache
     )
+
+
+class BotCombination(BaseBotCombination):
+    ...
 
 
 __all__ = (
